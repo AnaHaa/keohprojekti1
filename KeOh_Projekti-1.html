@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body,
+        html {
+            background-color: rgb(245, 241, 233);
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .header {
+            font-size: xx-large;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+
+        .container {
+
+            width: 80%;
+            font-size: xx-large;
+            margin: auto;
+            margin-bottom: 15px;
+        }
+
+        .calender {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            background-color: rgb(205, 181, 153);
+        }
+
+        .dayinfo {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            background-color: rgb(205, 181, 153);
+        }
+
+        .day {
+            border: 2px solid;
+            margin-right: -2px;
+            margin-bottom: -2px;
+            transition-duration: 0.2s;
+            text-align: center;
+            vertical-align: middle;
+            font-size: xx-large;
+            line-height: 120px;
+            cursor: pointer;
+        }
+
+        .nullbox {
+            border: 2px solid;
+            margin-right: -2px;
+            margin-bottom: -2px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: xx-large;
+        }
+
+        .grid-container {
+            margin-left: auto;
+            margin-right: auto;
+            display: grid;
+            text-align: center;
+            grid-template-columns: repeat(auto-fit, 20%);
+            min-height: 50px;
+            font-size: xx-large;
+            line-height: 50px;
+        }
+
+        .nextlastdate {
+            
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            margin-bottom: 10px;
+            color: black;
+        }
+
+        .date-box {
+            text-align: center;
+            border: 2px solid;
+            margin-left: -2px;
+            margin-right: -2px;
+            color: inherit;
+            font-size: x-large;
+            background-color: rgb(205, 181, 153);
+        }
+
+        .day-box {
+            text-align: center;
+            border: 2px solid;
+            margin-right: -2px;
+            margin-bottom: -2px;
+            font-size: large;
+        }
+
+        .button-theme {
+            width: 10%;
+            margin-top: 1px;
+            margin-right: 1px;
+            font-size: x-large;
+            color: #ffffff;
+            border: 2px solid;
+            background-color: #464649;
+            float: right;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button-input1 {
+            width: 29%;
+            margin-left: 14%;
+            font-size: x-large;
+            border: 2px solid;
+            background-color: white;
+            cursor: pointer;
+
+        }
+
+        .button-input2 {
+            width: 29%;
+            margin-left: 14%;
+            font-size: x-large;
+            border: 2px solid;
+            background-color: white;
+            cursor: pointer;
+
+        }
+
+        .button-month {
+            font-size: x-large;
+            border: 2px solid;
+            background-color: rgb(245, 241, 233);
+            color: inherit;
+            cursor: pointer;
+
+        }
+
+        .day:hover,
+        .button-month:hover {
+            color: black;
+            background-color: rgb(205, 181, 153);
+        }
+
+        .button-theme:hover {
+            background-color: #1f1f23;
+            color: #ffffff;
+        }
+
+        .button-input1:hover {
+            color: black;
+            background-color: #85cf84;
+        }
+
+        .button-input2:hover {
+            color: black;
+            background-color: #CDB599;
+        }
+
+        .form-popup {
+            position: fixed;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            padding: 15px;
+            background-color: inherit;
+            visibility: hidden;
+        }
+
+        #overlay {
+            position: fixed;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, .5);
+            pointer-events: none;
+        }
+
+        #overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .form-container {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            font-size: larger;
+        }
+
+        .selected {
+            background-color: rgb(205, 181, 153);
+        }
+
+        /* DARK THEME STARTS HERE 
+        DARKEST #0e0e10
+        DARK 	#18181b
+        LIGHT DARK #1f1f23
+        LIGHTEST DARK #464649
+        */
+
+        .dark_mode {
+            background-color: #0e0e10;
+            color: white;
+        }
+
+        .dark_mode .day,
+        .dark_mode .nullbox,
+        .dark_mode .date-box {
+            background-color: #18181b;
+            color: #ffffff;
+            border-color: #464649;
+        }
+
+        .dark_mode .day-box,
+        .dark_mode .button-month {
+            background-color: #1f1f23;
+            color: #ffffff;
+            border-color: #464649;
+        }
+
+        .dark_mode .day:hover,
+        .dark_mode .button-input2:hover {
+            background-color: #464649;
+            color: #ffffff;
+        }
+
+        .dark_mode .button-month:hover {
+            background-color: #464649;
+        }
+
+
+        .dark_mode .button-theme {
+            width: 10%;
+            margin-top: 1px;
+            margin-right: 1px;
+            font-size: x-large;
+            color: black;
+            border: 2px solid;
+            background-color: rgb(245, 241, 233);
+            float: right;
+            border-radius: 4px;
+            cursor: pointer;
+            border-color: #464649;
+        }
+
+        .dark_mode .button-theme:hover {
+            background-color: #ffffff;
+        }
+
+        .dark_mode #overlay {
+            position: fixed;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, .5);
+            pointer-events: none;
+        }
+
+        .dark_mode #overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .dark {
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        PROJEKTI 1: KALENTERI (Antti H, Hannes P & Anttoni R)
+        <button class="button-theme" onclick="changeTheme()">Theme</button>
+
+    </div>
+    <div class="container">
+        <div class="dayinfo">
+            <div class="day-box" id="daytitle1">Today</div>
+            <div class="day-box" id="daytitle2">Tomorrow</div>
+            <div class="day-box" id="daytitle3">Today + 2 days</div>
+            <div class="day-box" id="daytitle4">Today + 3 days</div>
+            <div class="day-box" id="daytitle5">Today + 4 days</div>
+        </div>
+        <div class="grid-container" id="values">
+            <div class="day-box" id="dayinfo1"></div>
+            <div class="day-box" id="dayinfo2"></div>
+            <div class="day-box" id="dayinfo3"></div>
+            <div class="day-box" id="dayinfo4"></div>
+            <div class="day-box" id="dayinfo5"></div>
+        </div>
+    </div>
+
+    <div class="nextlastdate" id="nextlastdate">
+        <input type="button" class="button-month" value="Last month" onclick="lastMonth()">
+        <div class="date-box" id="date-box">Current Date</div>
+        <input type="button" class="button-month" value="Next month" onclick="nextMonth()">
+    </div>
+
+    <div class="weekdays">
+        <div class="day-box">Monday</div>
+        <div class="day-box">Tuesday</div>
+        <div class="day-box">Wednesday</div>
+        <div class="day-box">Thursday</div>
+        <div class="day-box">Friday</div>
+        <div class="day-box">Saturday</div>
+        <div class="day-box">Sunday</div>
+    </div>
+
+    <div id="overlay"></div>
+
+    <div class="calender">
+    </div>
+
+    <div class="form-popup" id="questionForm">
+        <form class="form-container">
+            <p id="dateContainer"></p>
+            <p>Input the event:
+                <input type="text" id="textEvent" maxlength="22"><br>
+            </p>
+        </form>
+        <input type="button" class="button-input1" value="ADD" onclick="saveForm()">
+        <input type="button" class="button-input2" value="EXIT" onclick="closeForm()">
+    </div>
+
+    <script>
+
+        // global variables
+        var storedEvents = new Array(5); // Store 5 days
+        const calender = document.querySelector(".calender");
+        var nowDate = new Date();
+        var nowMonth = nowDate.getMonth() + 1;
+        var nowYear = nowDate.getFullYear();
+        var nowDay = nowDate.getDate();
+        var saveDateTemp;
+        var selectedDay;
+
+        // Function to return the current day number
+        function daysInMonth(month, year) {
+            return new Date(year, month, 0).getDate();
+        }
+
+        // Function that returns the weekday in a number 1 - 7
+        function getDay(d) {
+            day = d.getDay();
+            if (day == 0) day = 7; // Sunday (0) to 7
+            return day - 1;
+        }
+
+        // Function to return the current time in ms since 1970
+        function returnDate(year, month, day) {
+            return new Date(year, month - 1, day).getTime();
+        }
+
+        function makeTheDivs() {
+            calender.innerHTML = "";
+            document.getElementById("date-box").innerHTML = nowMonth + "." + nowYear;
+            // Add the null boxes to the calender div
+            for (let nullbox = 1; nullbox <= getDay(new Date(`${nowMonth} 1, ${nowYear}`)); nullbox++) {
+                calender.insertAdjacentHTML("beforeend", `<div
+                    class="nullbox"></div>`);
+            }
+
+            // Add the days to the calender div, use current month to get the number of days
+            for (let day = 1; day <= daysInMonth(nowMonth, nowYear); day++) {
+                calender.insertAdjacentHTML("beforeend", `<div
+                    class="day" id="day${day}">${day}</div>`);
+            }
+
+            // Add a eventlistener click to the days in the calender
+            document.querySelectorAll(".calender .day").forEach(day => {
+                day.addEventListener("click", event => {
+                    event.currentTarget.classList.toggle("selected");
+                    document.getElementById("dateContainer").innerText = "The chosen date is: " + event.currentTarget.innerText + "." + nowMonth + "." + nowYear;
+                    saveDateTemp = returnDate(nowYear, nowMonth, event.currentTarget.innerText);
+                    selectedDay = document.getElementById(`day${event.currentTarget.innerText}`);
+                    openForm();
+                }
+                )
+            }
+            )
+
+            // Style the current day
+            for (let i = 1; i <= daysInMonth(nowDate.getMonth() + 1, nowDate.getFullYear()); i++) {
+                if (document.getElementById(`day${i}`).innerText == nowDate.getDate() && nowMonth == nowDate.getMonth() + 1 && nowYear == nowDate.getFullYear()) {
+                    document.getElementById(`day${i}`).style.background = "#CDB599";
+                }
+            }
+            initAndPrint();
+        }
+
+        // Loop to initialize array elements
+        function initAndPrint() {
+            for (let i = 0; i < 5; i++) { // creates the array from myCalender storage
+                let loopDate = returnDate(nowDate.getFullYear(), (nowDate.getMonth() + 1), nowDay) + (i * 86400000);
+                storedEvents[i] = localStorage.getItem(loopDate);
+            }
+            for (let i = 0; i < 5; i++) { // Print the content of the array in the day - boxes
+                if (storedEvents[i] != null) { // If the info is corrupted, ignore
+                    document.getElementById(`dayinfo${i + 1}`).innerHTML = storedEvents[i]; // Prepend the info in the box
+                }
+                // Add the date title in the 5 box
+                document.getElementById(`daytitle${i + 1}`).innerHTML = ((nowDate.getDate()) + i) + "." + (nowDate.getMonth() + 1);
+            }
+        }
+
+        // Change the current theme to black or white
+        /*
+        function changeTheme() {
+            if (document.body.style.background != "white") {
+                document.body.style.background = 'white';
+                document.body.style.color = 'inherit';
+                document.getElementsByClassName("form-popup").style.background = 'white';
+            }
+            else {
+                document.body.style.background = '#121212';
+                document.body.style.color = 'white';
+                document.form.style.background = '#121212';
+            }
+        }*/
+
+        var state = false;
+
+        function changeTheme() {
+            if (state == false) {
+                document.body.classList.toggle("dark_mode")
+                for (let i = 1; i <= daysInMonth(nowDate.getMonth() + 1, nowDate.getFullYear()); i++) {
+                    if (document.getElementById(`day${i}`).innerText == nowDate.getDate() && nowMonth == nowDate.getMonth() + 1 && nowYear == nowDate.getFullYear()) {
+                        document.getElementById(`day${i}`).style.background = "#464649";
+                    }
+                }
+
+                state = true;
+                return;
+            }
+
+            if (state == true) {
+                document.body.classList.toggle("dark_mode")
+                for (let i = 1; i <= daysInMonth(nowDate.getMonth() + 1, nowDate.getFullYear()); i++) {
+                    if (document.getElementById(`day${i}`).innerText == nowDate.getDate() && nowMonth == nowDate.getMonth() + 1 && nowYear == nowDate.getFullYear()) {
+                        document.getElementById(`day${i}`).style.background = "#CDB599";
+                    }
+                }
+                state = false;
+                return;
+            }
+
+        }
+
+        // Function to open the pop-up form
+        function openForm() {
+            document.getElementById("overlay").classList.add("active");
+            document.getElementById("questionForm").style.visibility = "visible";
+        }
+
+        // Function to save the current data from the pop-up form
+        function saveForm() {
+            var questText = document.getElementById("textEvent").value;
+            localStorage.setItem(saveDateTemp, questText);
+            initAndPrint();
+            closeForm();
+        }
+
+        // Function to go one month forward
+        function closeForm() {
+            document.getElementById("overlay").classList.remove("active");
+            document.getElementById("questionForm").style.visibility = "hidden";
+            selectedDay.classList.toggle("selected");
+        }
+
+        // Function to go one month forward
+        function nextMonth() {
+            if (nowMonth == 12) {
+                nowMonth = 1;
+                nowYear++;
+            }
+            else {
+                nowMonth++;
+            }
+            makeTheDivs();
+        }
+
+        // Function to go one month backwards
+        function lastMonth() {
+            if (nowMonth == 1) {
+                nowMonth = 12;
+                nowYear--;
+            }
+            else {
+                nowMonth--;
+            }
+            makeTheDivs();
+        }
+
+        window.onload = makeTheDivs; // Do this func on page load
+
+    </script>
+</body>
+
+</html>
